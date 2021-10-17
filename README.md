@@ -1,3 +1,5 @@
+//DAPPER, EF CORE, Unity of Work, Repository Pattern, SQL Server
+
 Mais um projeto pra treinar .NET 
 
 Nesse projeto o objetivo é criar uma pequena loja virtual de livros.
@@ -10,7 +12,6 @@ que faz a referência entre um Autor e um Livro.
 Controllers e Views de Livro, Autor e Categoria ok
 
 ToDo: Implementar a loja e os processos que serão realizados
-
 
 
 
