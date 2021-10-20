@@ -29,7 +29,7 @@ namespace com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Reposit
                 var query = $@"INSERT INTO Livro (Nome, DataRegistro, DataAtualizacao, CategoriaId)
                                OUTPUT Inserted.Id VALUES (@Nome, @DataRegistro, @DataAtualizacao, @CategoriaId)";
 
-                return await _dbSession.Connection.ExecuteScalarAsync<int>(query, param: param,
+                return await _dbSession.Connection.ExecuteScalarAsync<int>(query, param: param, 
                     transaction: _dbSession.Transaction, commandType: System.Data.CommandType.Text);
             }
             catch (Exception)

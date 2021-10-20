@@ -46,7 +46,6 @@ namespace com.NascimentoSoftware.BookStore.WebApp
             services.AddTransient<CategoriaRepository>();
             services.AddTransient<LivroRepository>();
             services.AddTransient<LivroAutorRepository>();
-            services.AddTransient<RegistroLivroRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
