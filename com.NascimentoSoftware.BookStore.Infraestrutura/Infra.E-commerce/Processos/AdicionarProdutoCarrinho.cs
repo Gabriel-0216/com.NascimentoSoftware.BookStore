@@ -1,4 +1,5 @@
 ﻿using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Contexto.BancoDados;
+using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Models.Processos;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,15 @@ namespace com.NascimentoSoftware.BookStore.Infraestrutura.Infra.E_commerce.Proce
         {
             _dbSession = session;
         }
-        public async Task<bool> AdicionarProduto(int CarrinhoId, int ProdutoId, decimal ValorProduto)
+        //adc produto -> recebe id usuario, id produto e valorDoProduto
+        public async Task<bool> AdicionarProduto(string Usuario, int ProdutoId, decimal ValorProduto)
         {
             try
             {
+                var carrinho = await GetOrCreateCarrinho(Usuario);
+
                 var param = new DynamicParameters();
-                param.Add("CarrinhoId", CarrinhoId);
+                param.Add("CarrinhoId", carrinho.Id);
                 param.Add("ProdutoId", ProdutoId);
                 param.Add("ValorProduto", ValorProduto);
 
@@ -57,6 +61,40 @@ namespace com.NascimentoSoftware.BookStore.Infraestrutura.Infra.E_commerce.Proce
                 _dbSession.Transaction.Rollback();
                 return false;
             }
+        }
+
+        public async Task<Carrinho> GetOrCreateCarrinho(string Usuario)
+        {
+            try
+            {
+                var carrinho = await GetCarrinho(Usuario);
+                if(carrinho == null)
+                {
+                    var param_02 = new DynamicParameters();
+                    param_02.Add("Usuario", Usuario);
+                    var query_02 = $@"INSERT INTO Carrinho(GuidUsuario) VALUES(@Usuario)";
+                    await _dbSession.Connection.ExecuteAsync(query_02, param: param_02, commandType: System.Data.CommandType.Text, transaction: _dbSession.Transaction);
+                    carrinho = await GetCarrinho(Usuario);
+                    return carrinho;
+                }
+                else
+                {
+                    return carrinho;
+                }
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+
+        }
+
+        public async Task<Carrinho> GetCarrinho(string usuario)
+        {
+            var param = new DynamicParameters();
+            param.Add("Usuario", usuario);
+            var query = $@"SELECT Id, GuidUsuario from Carrinho WHERE GuidUsuario = @Usuario";
+            return await _dbSession.Connection.QueryFirstOrDefaultAsync<Carrinho>(query, param: param, commandType: System.Data.CommandType.Text, transaction: _dbSession.Transaction);
         }
     }
 }

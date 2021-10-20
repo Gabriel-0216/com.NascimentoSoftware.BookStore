@@ -9,7 +9,7 @@ namespace com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Models.
     public class Carrinho
     {
         public int Id { get; set; }
-        public Guid GuidUsuario { get; set; }
+        public string GuidUsuario { get; set; }
 
     }
 }

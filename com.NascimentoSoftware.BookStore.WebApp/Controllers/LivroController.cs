@@ -154,17 +154,13 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
         }
 
         private async Task<bool> AdicionarProdutoCarrinho(AdicionarProdutoCarrinho adcRepo, LivroRepository livroRepo, int id)
-        {
+        {  
             try
-            {//To-Do: verificação se o carrinho já existe pro usuário, se existe retornar o id ->  se não criar e retornar o id dele.
-             //Adicionra na tabela de Produto_cARRInho os valores 
+            {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var livroInfra = await livroRepo.GetOne((int)id);
-                
-
-
+                return await adcRepo.AdicionarProduto(userId, id, Convert.ToDecimal(29.50));
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return false;
             }
