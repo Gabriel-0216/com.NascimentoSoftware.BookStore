@@ -1,4 +1,5 @@
 using com.NascimentoSoftware.BookStore.Infraestrutura;
+using com.NascimentoSoftware.BookStore.Infraestrutura.Infra.E_commerce.Processos;
 using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Contexto.BancoDados;
 using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Contexto.UnityOfWork;
 using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Repositorios.Repository;
@@ -47,6 +48,7 @@ namespace com.NascimentoSoftware.BookStore.WebApp
             services.AddTransient<LivroRepository>();
             services.AddTransient<LivroAutorRepository>();
             services.AddTransient<RegistroLivroRepository>();
+            services.AddTransient<AdicionarProdutoCarrinho>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

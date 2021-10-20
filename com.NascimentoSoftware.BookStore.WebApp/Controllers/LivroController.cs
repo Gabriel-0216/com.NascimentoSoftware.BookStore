@@ -1,4 +1,5 @@
-﻿using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Repositorios.Repository;
+﻿using com.NascimentoSoftware.BookStore.Infraestrutura.Infra.E_commerce.Processos;
+using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Repositorios.Repository;
 using com.NascimentoSoftware.BookStore.WebApp.Models;
 using com.NascimentoSoftware.BookStore.WebApp.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -6,12 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
 {
     public class LivroController : Controller
     {
+
         public async Task<IActionResult> Index([FromServices] LivroRepository repository)
         {
             var listaLivros = new List<Livro>();
@@ -135,6 +138,39 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
                 });
             }
             return listaCategorias;
+        }
+
+        public async Task<IActionResult> CarrinhoAdd([FromServices] AdicionarProdutoCarrinho adicionarRepo, [FromServices] LivroRepository livroRepo, int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                await AdicionarProdutoCarrinho(adicionarRepo, livroRepo, (int)id);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        private async Task<bool> AdicionarProdutoCarrinho(AdicionarProdutoCarrinho adcRepo, LivroRepository livroRepo, int id)
+        {
+            try
+            {//To-Do: verificação se o carrinho já existe pro usuário, se existe retornar o id ->  se não criar e retornar o id dele.
+             //Adicionra na tabela de Produto_cARRInho os valores 
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var livroInfra = await livroRepo.GetOne((int)id);
+                
+
+
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+            
+            
+
         }
     }
 }
