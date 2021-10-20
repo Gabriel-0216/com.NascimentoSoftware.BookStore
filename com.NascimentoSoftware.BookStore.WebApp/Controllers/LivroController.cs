@@ -42,7 +42,7 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create([FromServices] LivroRepository repository, [FromServices] LivroAutorRepository livroAutorRepository, LivroViewModel model) //Add LivroAutor
+        public async Task<IActionResult> Create([FromServices] LivroRepository repository, [FromServices]AutorRepository autorRepo, [FromServices] RegistroLivroRepository registroLivroRepo, LivroViewModel model) //Add LivroAutor
         {
             if (ModelState.IsValid)
             {
@@ -53,13 +53,12 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
                     DataRegistro = DateTime.Now,
                     CategoriaId = model.CategoriaId,
                 };
-                var idLivro = await repository.Add(livroInfra);
-                await livroAutorRepository.Add(new Infraestrutura.Infraestrutura.Models.Processos.LivroAutor()
-                {
-                    AutorId = model.AutorId,
-                    LivroId = idLivro,
-                });
-                
+
+                var autor = await autorRepo.GetOne((int)model.AutorId);
+                await registroLivroRepo.InserirLivro(livroInfra, autor);
+
+
+
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -93,11 +92,11 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Delete([FromServices] LivroRepository repository, int id)
+        public async Task<IActionResult> Delete([FromServices] RegistroLivroRepository repository, int id)
         {
             try
             {
-                await repository.Delete((int)id);
+                await repository.DeletarLivro((int)id);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception)
