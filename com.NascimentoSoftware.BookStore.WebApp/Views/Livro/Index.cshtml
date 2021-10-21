@@ -8,10 +8,11 @@
 
 <h1>Index</h1>
 
-@if (SignInManager.IsSignedIn(User)) {
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
 }
 <table class="table">
     <thead>
@@ -53,16 +54,33 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CategoriaId)
                 </td>
-                @if (SignInManager.IsSignedIn(User)){ 
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                @Html.ActionLink("Comprar", "CarrinhoAdd", new { id=item.Id })
-               
-            </td>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <td>
+
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+                        <a id="btnComprar" class="btn btn-primary" asp-action="CarrinhoAdd" asp-route-id="@item.Id">Comprar</a>
+                        <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
+                    </td>
                 }
             </tr>
         }
     </tbody>
 </table>
+
+
+
+
+
+@section Scripts{
+    <script>
+        document.getElementById("btnComprar").addEventListener("click", showPopup);
+
+        function showPopup() {
+            window.alert("Produto adicionado ao carrinho");
+        }
+
+       
+    </script>
+}

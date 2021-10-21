@@ -1,4 +1,5 @@
-﻿using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Contexto.BancoDados;
+﻿using com.NascimentoSoftware.BookStore.Infraestrutura.Infra.E_commerce.Models;
+using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Contexto.BancoDados;
 using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Models.Processos;
 using Dapper;
 using System;
@@ -95,6 +96,26 @@ namespace com.NascimentoSoftware.BookStore.Infraestrutura.Infra.E_commerce.Proce
             param.Add("Usuario", usuario);
             var query = $@"SELECT Id, GuidUsuario from Carrinho WHERE GuidUsuario = @Usuario";
             return await _dbSession.Connection.QueryFirstOrDefaultAsync<Carrinho>(query, param: param, commandType: System.Data.CommandType.Text, transaction: _dbSession.Transaction);
+        }
+
+        public async Task<IEnumerable<ProdutosCarrinho>> GetProdutosCarrinho(string usuario)
+        {
+            try
+            {
+                var Carrinho = await GetCarrinho(usuario);
+                var param = new DynamicParameters();
+                param.Add("CarrinhoId", Carrinho.Id);
+
+                var query = $"SELECT Id, CarrinhoId, ProdutoId, ValorProduto from Produto_Carrinho where CarrinhoId = @CarrinhoId";
+
+                return await _dbSession.Connection.QueryAsync<ProdutosCarrinho>(query, param: param, 
+                            commandType: System.Data.CommandType.Text, transaction: _dbSession.Transaction);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
     }
 }

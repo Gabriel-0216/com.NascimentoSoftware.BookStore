@@ -14,7 +14,6 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
 {
     public class LivroController : Controller
     {
-
         public async Task<IActionResult> Index([FromServices] LivroRepository repository)
         {
             var listaLivros = new List<Livro>();
@@ -140,6 +139,7 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
             return listaCategorias;
         }
 
+        [Authorize]
         public async Task<IActionResult> CarrinhoAdd([FromServices] AdicionarProdutoCarrinho adicionarRepo, [FromServices] LivroRepository livroRepo, int? id)
         {
             if (id == null)
@@ -153,6 +153,7 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
             }
         }
 
+        [Authorize]
         private async Task<bool> AdicionarProdutoCarrinho(AdicionarProdutoCarrinho adcRepo, LivroRepository livroRepo, int id)
         {  
             try

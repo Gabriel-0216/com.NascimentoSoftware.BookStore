@@ -1,0 +1,51 @@
+﻿@model IEnumerable<com.NascimentoSoftware.BookStore.WebApp.Models.eCommerce.ProdutoCarrinho>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="FinalizarCompra">Finalizar compra</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomeProduto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrecoProduto)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomeProduto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrecoProduto)
+            </td>
+            <td>
+                <a id="btnRemover" class="btn btn-danger" asp-action="RemoverCarrinho" asp-route-id="@item.IdProduto">Remover do carrinho</a>   
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+@section Scripts{ 
+    <script>
+        document.getElementById("btnRemover").addEventListener("click", showPopup);
+
+        function showPopup() {
+            window.alert("Removido com sucesso");
+        }
+    </script>
+
+}
