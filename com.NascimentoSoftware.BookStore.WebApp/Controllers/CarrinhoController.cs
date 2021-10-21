@@ -1,5 +1,6 @@
 ﻿using com.NascimentoSoftware.BookStore.Infraestrutura.Infra.E_commerce.Processos;
 using com.NascimentoSoftware.BookStore.Infraestrutura.Infraestrutura.Repositorios.Repository;
+using com.NascimentoSoftware.BookStore.WebApp.Models;
 using com.NascimentoSoftware.BookStore.WebApp.Models.eCommerce;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,34 @@ namespace com.NascimentoSoftware.BookStore.WebApp.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [Authorize]
+        public async Task<IActionResult> FinalizarCompra([FromServices] AdicionarProdutoCarrinho produtoCarrinho, [FromServices] LivroRepository livroRepo)
+        {
+            var listaProdutosCarrinho = await produtoCarrinho.GetProdutosCarrinho(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var listaModel = new List<Livro>();
+
+            foreach(var item in listaProdutosCarrinho)
+            {
+                var livro = await livroRepo.GetOne((int)item.ProdutoId);
+                listaModel.Add(new Livro
+                {
+                    Id = livro.Id,
+                    Nome = livro.Nome,
+                    CategoriaId = livro.CategoriaId,
+                    DataAtualizacao = livro.DataAtualizacao,
+                    DataRegistro = livro.DataRegistro,
+                });
+            }
+
+            var produto = new ProdutosFinalizacao();
+            produto.listaLivros = listaModel;
+            produto.Valor_Total = 50;
+            produto.Valor_Pago = 0;
+
+
+            return View(produto);
         }
 
     }
